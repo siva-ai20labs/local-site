@@ -1,0 +1,60 @@
+// LocalSite AI Admin Dashboard — Prisma schema (SQLite, file-based).
+// Swappable to Postgres later by changing the datasource provider + DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum type, so `role` is a string constrained in app code
+// to the Role union ("admin" | "user"). See src/lib/types.ts.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("user")
+  createdAt    DateTime @default(now())
+}
+
+model Prospect {
+  id           String    @id @default(cuid())
+  businessName String
+  phone        String?
+  category     String?
+  rating       Float?
+  reviewCount  Int?
+  address      String?
+  hours        String?
+  topReviews   String?
+  mapsUrl      String?
+  hasWebsite   Boolean   @default(false)
+  websiteUrl   String?
+  builtSiteUrl String?
+  // status: new | site_built | build_failed
+  status       String    @default("new")
+  scrapeSource String?
+  scrapedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Dedup key for the scraper upsert.
+  @@unique([businessName, address], name: "businessName_address")
+}
+
+model ScraperRun {
+  id        String   @id @default(cuid())
+  provider  String
+  query     String?
+  // status: success | failed
+  status    String
+  found     Int      @default(0)
+  inserted  Int      @default(0)
+  updated   Int      @default(0)
+  message   String?
+  createdAt DateTime @default(now())
+}
+

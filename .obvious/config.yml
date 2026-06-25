@@ -1,0 +1,5 @@
+# Autobuild workflow policy for siva-ai20labs/test
+
+default_branch: main
+pr_merge_method: squash
+

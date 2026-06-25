@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# production (root-anchored so it does not match nested route dirs named "build")
+/build/
+
+# database (SQLite)
+*.db
+*.db-journal
+prisma/dev.db
+prisma/dev.db-journal
+
+# env
+.env
+.env.local
+.env*.local
+
+# misc
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+npm-debug.log*
+
